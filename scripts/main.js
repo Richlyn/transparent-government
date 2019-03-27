@@ -7,12 +7,24 @@ new Vue({
       reps: [],
       checkedBoxes: {
         partyChecked: []
-      }
+      },
+      states: [],
+      selectedStates: []
     };
   },
-  // computed: {
-
-  // },
+  computed: {
+    filteredSenates: function() {
+      console.log("hello " + this.checkedBoxes.partyChecked.length);
+      if (this.checkedBoxes.partyChecked.length == 0 /*&& state === "All"*/) {
+        return this.senators;
+      } else {
+        return this.senators.filter(
+          senator => this.checkedBoxes.partyChecked.includes(senator.party)
+          // && senator.state === state
+        );
+      }
+    }
+  },
   methods: {
     getData() {
       fetch("https://api.myjson.com/bins/1gqjt6", {
@@ -30,6 +42,26 @@ new Vue({
           console.log(3);
           this.senators = data.results[0].members;
           console.log(this.senators);
+        })
+
+        .then(dataStates => {
+          for (i = 0; i < this.senators.length; i++) {
+            for (j = 0; j < this.senators.length; j++) {
+              //setting up new array
+              if (i != j) {
+                //comparing arrays and not indexes not creating a false positive
+                if (this.senators[i] == this.senators[j]) {
+                  console.log(7);
+                  // checking individual elements with same value
+                  if (!this.states.includes(this.senators[i].state)) {
+                    //makes sure the value doesn't already exist
+                    this.states.push(this.senators); // pushed into array file
+                    console.log("work" + this.senators);
+                  }
+                }
+              }
+            }
+          }
         })
         .catch(err => console.log(err));
     },
@@ -51,20 +83,6 @@ new Vue({
           console.log(this.reps);
         })
         .catch(err => console.log(err));
-    },
-    filteredSenates: function() {
-      console.log("hello " + this.checkedBoxes.partyChecked.length);
-      if (this.checkedBoxes.partyChecked.length == 0) {
-        return this.senators;
-      } else {
-        this.senators.filter(senator => {
-          console.log(senator.party);
-          this.checkedBoxes.partyChecked.forEach(party => {
-            senator.party.includes(party);
-          });
-        });
-        console.log(this.senators);
-      }
     }
   },
   mounted() {
@@ -81,7 +99,7 @@ new Vue({
   //   } else {
   //     return vm.people.filter(function(person) {
   //       //return the array after passimng it through the filter function:
-  //       return (
+  //       return (0-
   //         (state === "All" || senator.state === state) &&
   //         (partyChecked === "All" || senator.party === partyChecked)
   //       );
