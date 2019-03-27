@@ -9,23 +9,49 @@ new Vue({
         partyChecked: []
       },
       states: [],
-      selectedStates: []
+      selectedStates: "ALL"
     };
   },
   computed: {
     filteredSenates: function() {
-      console.log("hello " + this.checkedBoxes.partyChecked.length);
-      if (this.checkedBoxes.partyChecked.length == 0 /*&& state === "All"*/) {
+      if (this.selectedStates)
+        console.log("hello im here" + this.selectedStates);
+      if (
+        this.checkedBoxes.partyChecked.length == 0 &&
+        this.selectedStates === "ALL"
+      ) {
         return this.senators;
       } else {
         return this.senators.filter(
-          senator => this.checkedBoxes.partyChecked.includes(senator.party)
-          // && senator.state === state
+          senator =>
+            (this.checkedBoxes.partyChecked.includes(senator.party) &&
+              senator.state == this.selectedStates) ||
+            (this.checkedBoxes.partyChecked.includes(senator.party) &&
+              this.selectedStates === "ALL")
         );
       }
     }
   },
   methods: {
+    removeDuplicates() {
+      for (var i = 0; i < this.senators.length; i++) {
+        for (var j = 0; j < this.senators.length; j++) {
+          //setting up new array
+          if (i != j) {
+            //comparing arrays and not indexes not creating a false positive
+            if (this.senators[i].state == this.senators[j].state) {
+              // checking individual elements with same value
+              if (!this.states.includes(this.senators[i].state)) {
+                //makes sure the value doesn't already exist
+                this.states.push(this.senators[i].state); // pushed into array file
+                this.states.sort();
+                // console.log("states without dupl " + this.states);
+              }
+            }
+          }
+        }
+      }
+    },
     getData() {
       fetch("https://api.myjson.com/bins/1gqjt6", {
         headers: {
@@ -41,27 +67,8 @@ new Vue({
         .then(data => {
           console.log(3);
           this.senators = data.results[0].members;
-          console.log(this.senators);
-        })
-
-        .then(dataStates => {
-          for (i = 0; i < this.senators.length; i++) {
-            for (j = 0; j < this.senators.length; j++) {
-              //setting up new array
-              if (i != j) {
-                //comparing arrays and not indexes not creating a false positive
-                if (this.senators[i] == this.senators[j]) {
-                  console.log(7);
-                  // checking individual elements with same value
-                  if (!this.states.includes(this.senators[i].state)) {
-                    //makes sure the value doesn't already exist
-                    this.states.push(this.senators); // pushed into array file
-                    console.log("work" + this.senators);
-                  }
-                }
-              }
-            }
-          }
+          // console.log(this.senators);
+          this.removeDuplicates();
         })
         .catch(err => console.log(err));
     },
@@ -80,7 +87,7 @@ new Vue({
         .then(data => {
           console.log(5);
           this.reps = data.results[0].members;
-          console.log(this.reps);
+          // console.log(this.reps);
         })
         .catch(err => console.log(err));
     }

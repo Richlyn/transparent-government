@@ -125,32 +125,18 @@
                 </div>
              </section>
              
-       <!--Dropdown-->
+       <!-- Dropdown -->
              <section >
                <div style="width:50% floatright" >
                   <label class="p-2 filter">Filter by State:</label>
-                  <select v-for="senator in filteredSenates"  v-model="selectedStates"> 
-                    <option  value="All" >{{selectedStates}}</option>
-                    <option  >{{selectedStates}}</option>
+                  <select v-model="selectedStates"> 
+                    <option  value="ALL" >All states</option>
+                    <option v-for="state in states">{{state}}</option>
                   </select>
               </div>
-           </section>
-         </div>
-         <!-- <div class="container"  style="width:50% floatright"  id="people">
-            <div class="filter">
-              <select v-model="selectedCategory" >
-                <option  value="All" >All</option>
-                <option  value="Al" > Alabama </option>
-                <option  value="Ak" > Alaska</option>
-                <option value="AZ" > Arizona</option>
-              </select>
-            </div>
-            
-            <ul class="people-list">
-              <li v-for="person in filteredPeople">{{ person.name }}</li>
-            </ul>
-          </div> -->
-
+           </section> 
+         </div> 
+         
           <!--Member Table-->
     <table class="displayTable table-hover table-striped  table-sm" cellspacing="0" width="100%" > 
         <thead class="py-sm-5">
@@ -171,7 +157,6 @@
             <td>{{senator.votes_with_party_pct}}</td>
           </tr>
         </tbody>
-      
       </table>
     </div>
  

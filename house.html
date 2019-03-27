@@ -101,42 +101,43 @@
       </p>
     </section>
   </div>
-  <div id="congress"> 
+<div id="congress"> 
   <div class="d-flex flex-rows justify-content-between" style="width:100%" > 
-      <!--Checkbox-->
-       <section class="d-flex flex-row justify-content-around" style="width:50%" > 
-          <p class="p-2">Filter by Party: </p>
-            <div class="form-check p-2">
-                <input class="form-check-input" type="checkbox" v-for= "value = R" id="republican" name ="party" onchange="filterMembers()">
-                <label class="form-check-label" for="republican">
-                  Republican
-                </label>
-              </div>
-              <div class="form-check p-2">
-                <input class="form-check-input" type="checkbox" value="D" id="democratic" name ="party" onchange="filterMembers()">
- 
-                <label class="form-check-label" for="democratic">
-                 Democratic
-                </label>
-              </div>                                                 
-              <div class="form-check p-2">
-                  <input class="form-check-input" type="checkbox" value="I" id="independent" name ="party" onchange="filterMembers()">
- 
-                  <label class="form-check-label" for="independent">
-                    Independent
-                  </label>
-                </div>
-                <span>Checked names: {{ checkedboxes }}</span>
+     <!--Checkbox-->
+      <section class="d-flex flex-row justify-content-around" style="width:50%" > 
+         <p class="p-2">Filter by Party: </p>
+           <div class="form-check p-2">
+               <input class="form-check-input" type="checkbox" value="R" id="republican" v-model = "checkedBoxes.partyChecked" >
+               <label class="form-check-label" for="republican">
+                 Republican
+               </label>
+             </div>
+             <div class="form-check p-2">
+               <input class="form-check-input" type="checkbox" value="D" id="democratic" v-model ="checkedBoxes.partyChecked">
 
-              </section>
-        <!--Dropdown-->
-              <section >
-                <div style="width:50% floatright">
-                   <label class="p-2">Filter by State:</label>
-                   <select id="state" name="states" onchange="filterMembers()"></select>
-               </div>
-            </section>
-          </div>
+               <label class="form-check-label" for="democratic">
+                Democratic
+               </label>
+             </div>                                                 
+             <div class="form-check p-2">
+                 <input class="form-check-input" type="checkbox" value="I" id="independent"  v-model ="checkedBoxes.partyChecked">
+
+                 <label class="form-check-label" for="independent">
+                   Independent
+                 </label>
+                </div>
+             </section>
+    <!-- Dropdown -->
+    <section >
+        <div style="width:50% floatright" >
+           <label class="p-2 filter">Filter by State:</label>
+           <select v-model="selectedStates"> 
+             <option  value="ALL" >All states</option>
+             <option v-for="state in states">{{state}}</option>
+           </select>
+       </div>
+    </section> 
+  </div> 
           <!--Member Table-->
       
               <table class="displayTable table-hover table-striped  table-sm" cellspacing="0" width="100%" > 
@@ -149,7 +150,7 @@
                         <th class="th-sm">% Votes w/ Party</th>
                       </tr>
                     </thead>
-                  <tbody v-for="(rep, index) in reps" :key="reps.id">
+                  <tbody v-for="(rep, index) in filteredReps" :key="reps.id">
                       <tr>
                       <td>{{index+1}}. {{rep.last_name, rep.first_name}} </td>
                       <td>{{rep.party}}</td>
